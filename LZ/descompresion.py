@@ -44,7 +44,7 @@ def descomprimir(comprimido):
                     n_byte+=1 #Siempre apunta al siguiente byte por leer
 
                 byte=int(procesado[pos_bit:pos_bit+8],2).to_bytes(1,byteorder='big')
-                ventana=movimiento_ventana(ventana,byte,len(byte),0) #(pos_bit/8) es la posicion del ultimo byte procesado
+                ventana=movimiento_ventana(ventana,byte,len(byte),0)
                 descomprimido.append(byte[0])
                 pos_bit+=8
 

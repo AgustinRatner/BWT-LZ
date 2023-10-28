@@ -35,7 +35,7 @@ def comprimir():
                 simb = bin(ventana_lectura[i])[2:].zfill(8)
                 comprimido = comprimido + simb
 
-        print("\nTamaño de ventana + primeros \"n\" simbolos de la ventana: " + comprimido+"\n")
+        print("\nLos primeros \""+ str(VENTANA) +"\" simbolos de la ventana: " + str(ventana_lectura)+"\n")
 
         long_fuente=VENTANA
         aux = archivo.read(1)
