@@ -4,4 +4,5 @@ import math
 
 VENTANA = 4
 VENTANA_MAX_BITS = int(math.log2(VENTANA)+1)
-TXT = "../datos/480-360-sample.bmp"
+ORIGEN = "../datos/agu.jpg"
+DESTINO = "../datos/agu1.jpg"

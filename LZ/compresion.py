@@ -1,6 +1,6 @@
 import math
 from descompresion import descomprimir
-from variables_globales import VENTANA,VENTANA_MAX_BITS,TXT
+from variables_globales import VENTANA,VENTANA_MAX_BITS,ORIGEN,DESTINO
 from movimiento import movimiento_ventana
 def match(bytes_ventana,bytes_no_comprimidos):
 
@@ -16,7 +16,7 @@ def comprimido_bytes(comprimido_bin):
     return arr_bytes
 def comprimir():
     try:
-        archivo = open(TXT, 'rb')
+        archivo = open(ORIGEN, 'rb')
 
         # Primero codificamos en 4 bits el valor "n < 16" que es el tamaño de la ventana, para que el receptor
         # luego pueda decodificar
@@ -41,14 +41,16 @@ def comprimir():
         if not aux:
             return "" #Fin del archivo
         procesado.append(aux[0])
+        fin_archivo=False
 
-        while True:
+        while not fin_archivo:
             cadena_match=bytearray()
 
             while len(match(ventana_lectura,procesado))!=0 and len(cadena_match) < VENTANA:
                 cadena_match.append(procesado[len(cadena_match)])
                 aux = archivo.read(1)
                 if not aux:
+                    fin_archivo=True
                     break #Fin del archivo
                 procesado.append(aux[0])
 
@@ -65,20 +67,20 @@ def comprimir():
                 #al siguiente de la ventana, es decir, el ultimo procesado
                 aux = archivo.read(1)
                 if not aux:
-                    break #Fin del archivo
-                procesado.append(aux[0])
+                    fin_archivo=True
+                else:
+                    procesado.append(aux[0])
 
                 # flag = 1 + codPseudo = (1 + long_codigo) bits
                 simb = '1' + bin(procesado[0])[2:].zfill(8)
                 ventana_lectura=movimiento_ventana(ventana_lectura,procesado,len(cadena_match),0)
                 long_fuente+=1
-                procesado=procesado[1:]
+                if aux:
+                    procesado=procesado[1:]
 
             comprimido = comprimido + simb
-            #print("cadena que hizo match: " + cadena_match)
 
         print("\nLongitud del original: "+str(long_fuente*8)+" bits")
-
         return comprimido_bytes(comprimido)
 
     except FileNotFoundError:
@@ -88,9 +90,13 @@ def comprimir():
 def main():
     comprimido = comprimir()
     if comprimido != "":
+        descomprimido=descomprimir(comprimido)
+        archivo_destino = open(DESTINO, 'wb')
+        archivo_destino.write(descomprimido)
+
         #print("\n\nComprimido (Bytes): "+ str(comprimido))
         print("\n\nLongitud de Comprimido (Incluyendo 4 bits para tamaño de ventana): "+str(len(comprimido)*8)+" bits")
-        print("\n\nLa longitud del descomprimido: " + str(len(descomprimir(comprimido))*8)+" bits")
+        print("\n\nLa longitud del descomprimido: " + str(len(descomprimido)*8)+" bits")
     else:
         print("\n\nVENTANA DEMASIADO GRANDE PARA COMPRIMIR")
 

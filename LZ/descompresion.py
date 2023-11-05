@@ -34,6 +34,7 @@ def descomprimir(comprimido):
     Sabiendo cuantos bits son, podemos determinar cuantos bits tenemos de relleno para completar el ultimo byte
     """
     while n_byte < len(comprimido):
+
         if(pos_bit < len(procesado)):
             #Si hay un 1, entonces lo que sigue son 8 bits de un símbolo que no existe en la ventana
             if(procesado[pos_bit] == '1'):
